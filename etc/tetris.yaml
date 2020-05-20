@@ -1,0 +1,59 @@
+---
+version: 1
+disable_existing_loggers: False
+formatters:
+    simple:
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    colored:
+        # colorlog is really useful
+        (): colorlog.ColoredFormatter
+        format: "%(asctime)s [%(bold)s%(log_color)s%(levelname)s%(reset)s]: (%(bold)s%(name)s:%(lineno)d%(reset)s) %(message)s"
+        style: "%"
+        datefmt: "%X"
+        log_colors:
+            DEBUG:    cyan
+            INFO:     green
+            WARNING:  yellow
+            ERROR:    red
+            CRITICAL: red,bg_white
+
+handlers:
+    console:
+        #class: logging.StreamHandler
+        class: colorlog.StreamHandler
+        level: DEBUG
+        formatter: colored
+        #stream: ext://sys.stdout
+
+    error_file_handler:
+        class: logging.handlers.RotatingFileHandler
+        level: DEBUG
+        formatter: simple
+        filename: log/errors.log
+        maxBytes: 10485760 # 10MB
+        backupCount: 20
+        encoding: utf8
+
+    training_handler:
+        class: logging.handlers.RotatingFileHandler
+        level: DEBUG
+        formatter: simple
+        filename: log/train.log
+        maxBytes: 10485760 # 10MB
+        backupCount: 20
+        encoding: utf8
+
+loggers:
+    tetris:
+        level: INFO
+        handlers: [console, error_file_handler]
+        propagate: no
+
+    tetris.Tetris.training:
+        level: DEBUG
+        handlers: [console, training_handler]
+        propagate: no
+
+root:
+    level: INFO
+    handlers: [console, error_file_handler]
