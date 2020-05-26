@@ -328,6 +328,11 @@ class Tetris:
     def k_rotate(self):
         if not self.gameover and not self.paused:
             rotated_piece = self.rotate(self.piece)
+
+            if self.check_collided(rotated_piece, self.current_pos):
+                while self.current_pos["x"] + len(rotated_piece[0]) > self.cols:
+                    self.current_pos["x"] -= 1
+
             if not self.check_collided(rotated_piece, self.current_pos):
                 self.piece = rotated_piece
 
